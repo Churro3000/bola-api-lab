@@ -27,34 +27,65 @@ let currentJWT = null;
 let currentUserId = null;
 
 // DOM elements
-const loginCard = document.getElementById('login-card');
-const userSelect = document.getElementById('user-select');
-const loginBtn = document.getElementById('login-btn');
-const jwtDisplay = document.getElementById('jwt-display');
-const dashboard = document.getElementById('dashboard');
-const currentUser = document.getElementById('current-user');
+const loginCard    = document.getElementById('login-card');
+const userSelect   = document.getElementById('user-select');
+const loginBtn     = document.getElementById('login-btn');
+const jwtDisplay   = document.getElementById('jwt-display');
+const dashboard    = document.getElementById('dashboard');
+const currentUser  = document.getElementById('current-user');
 const currentJWTEl = document.getElementById('current-jwt');
 const payloadTextarea = document.getElementById('payload');
 const getProfileBtn = document.getElementById('get-profile-btn');
-const getOrdersBtn = document.getElementById('get-orders-btn');
+const getOrdersBtn  = document.getElementById('get-orders-btn');
 const putProfileBtn = document.getElementById('put-profile-btn');
-const responseBox = document.getElementById('response-box');
-const logoutBtn = document.getElementById('logout-btn');
+const responseBox   = document.getElementById('response-box');
+const logoutBtn     = document.getElementById('logout-btn');
 
+// ────────────────────────────────────────────────
+// FORCE LOGIN SCREEN ON EVERY PAGE LOAD / REFRESH
+// This prevents dashboard from staying visible after reload
+// ────────────────────────────────────────────────
+function resetToLogin() {
+    currentJWT = null;
+    currentUserId = null;
+
+    if (dashboard)    dashboard.classList.add('hidden');
+    if (loginCard)    loginCard.classList.remove('hidden');
+    if (jwtDisplay) {
+        jwtDisplay.classList.add('hidden');
+        jwtDisplay.textContent = '';
+    }
+    if (responseBox)  responseBox.textContent = '';
+    if (payloadTextarea) {
+        payloadTextarea.value = JSON.stringify({ id: 1 }, null, 2);
+    }
+}
+
+// Run reset immediately when script loads
+resetToLogin();
+
+// ────────────────────────────────────────────────
 // Generate fake JWT
+// ────────────────────────────────────────────────
 function generateFakeJWT(userId) {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const payload = btoa(JSON.stringify({ sub: userId, name: userNames[userId], iat: Math.floor(Date.now() / 1000) }));
-    const signature = btoa('fake-signature'); // Fake signature
+    const payloadObj = {
+        sub: userId,
+        name: userNames[userId],
+        iat: Math.floor(Date.now() / 1000)
+    };
+    const payload = btoa(JSON.stringify(payloadObj));
+    const signature = btoa('fake-signature');
     return `${header}.${payload}.${signature}`;
 }
 
+// ────────────────────────────────────────────────
 // Simulate API call (vulnerable to BOLA)
+// ────────────────────────────────────────────────
 function simulateApi(method, endpoint, payload, jwt) {
     if (!jwt) {
         return { error: 'Unauthorized: No JWT provided' };
     }
-    // In a real scenario, verify JWT here. But for simulation, we assume it's valid.
 
     let id;
     try {
@@ -66,12 +97,10 @@ function simulateApi(method, endpoint, payload, jwt) {
     }
 
     // VULNERABILITY: No ownership check here.
-    // We do not verify if the requested 'id' matches the authenticated user's ID from JWT 'sub' claim.
-    // This allows any authenticated user to access/update any other user's data by changing the 'id' in the payload.
-    // TO FIX: On the server-side, decode the JWT, extract 'sub', and check if sub === id before proceeding.
-    // Example fix pseudocode:
+    // Any logged-in user can access/update any other user's data by changing id.
+    // TO FIX (server-side): 
     // const decoded = jwt.verify(jwt, secret);
-    // if (decoded.sub !== id) return { error: 'Forbidden: You do not own this resource' };
+    // if (decoded.sub !== id) return { error: 'Forbidden: Not owner' };
 
     if (endpoint === '/api/profile/{id}') {
         if (method === 'GET') {
@@ -79,30 +108,33 @@ function simulateApi(method, endpoint, payload, jwt) {
             return profile ? profile : { error: 'Profile not found' };
         } else if (method === 'PUT') {
             if (!fakeDatabase.profiles[id]) return { error: 'Profile not found' };
-            Object.assign(fakeDatabase.profiles[id], payload); // Update with payload (including id if changed, but risky)
+            Object.assign(fakeDatabase.profiles[id], payload);
             return { success: 'Profile updated', updated: fakeDatabase.profiles[id] };
         }
     } else if (endpoint === '/api/orders/{id}' && method === 'GET') {
         const orders = fakeDatabase.orders[id];
         return orders ? orders : { error: 'Orders not found' };
     }
+
     return { error: 'Invalid endpoint or method' };
 }
 
+// ────────────────────────────────────────────────
 // Event listeners
+// ────────────────────────────────────────────────
 loginBtn.addEventListener('click', () => {
     currentUserId = parseInt(userSelect.value, 10);
     currentJWT = generateFakeJWT(currentUserId);
+
     jwtDisplay.textContent = `JWT: ${currentJWT}`;
     jwtDisplay.classList.remove('hidden');
 
-    // Show dashboard
     loginCard.classList.add('hidden');
     dashboard.classList.remove('hidden');
+
     currentUser.textContent = `${userNames[currentUserId]} (ID ${currentUserId})`;
     currentJWTEl.textContent = currentJWT;
 
-    // Reset payload and response
     payloadTextarea.value = JSON.stringify({ id: currentUserId }, null, 2);
     responseBox.textContent = '';
 });
@@ -144,17 +176,13 @@ putProfileBtn.addEventListener('click', () => {
 });
 
 logoutBtn.addEventListener('click', () => {
-    currentJWT = null;
-    currentUserId = null;
-    dashboard.classList.add('hidden');
-    loginCard.classList.remove('hidden');
-    jwtDisplay.classList.add('hidden');
-    jwtDisplay.textContent = '';
-    responseBox.textContent = '';
+    resetToLogin();  // Reuse the same reset function
 });
 
-// Initial payload
-payloadTextarea.value = JSON.stringify({ id: 1 }, null, 2);
+// Initial setup (in case DOM is ready but we want safe fallback)
+if (payloadTextarea) {
+    payloadTextarea.value = JSON.stringify({ id: 1 }, null, 2);
+}
 
-// Note: To exploit BOLA, edit the 'id' in the textarea via browser (or DevTools) to another user's ID and click a button.
-// Since this is client-side simulation, changes to fakeDatabase persist in memory until page refresh.
+// Note: To exploit BOLA → edit the "id" value in the textarea (via browser or DevTools)
+// and click any GET/PUT button. No real auth checks are done.

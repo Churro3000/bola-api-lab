@@ -42,27 +42,60 @@ const responseBox   = document.getElementById('response-box');
 const logoutBtn     = document.getElementById('logout-btn');
 
 // ────────────────────────────────────────────────
-// FORCE LOGIN SCREEN ON EVERY PAGE LOAD / REFRESH
-// This prevents dashboard from staying visible after reload
+// PERSIST LOGIN STATE ACROSS REFRESHES
 // ────────────────────────────────────────────────
-function resetToLogin() {
-    currentJWT = null;
-    currentUserId = null;
+const STORAGE_KEY = 'bola-lab-session';
 
-    if (dashboard)    dashboard.classList.add('hidden');
-    if (loginCard)    loginCard.classList.remove('hidden');
-    if (jwtDisplay) {
-        jwtDisplay.classList.add('hidden');
-        jwtDisplay.textContent = '';
-    }
-    if (responseBox)  responseBox.textContent = '';
-    if (payloadTextarea) {
-        payloadTextarea.value = JSON.stringify({ id: 1 }, null, 2);
+function saveSession() {
+    if (currentUserId && currentJWT) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            userId: currentUserId,
+            jwt: currentJWT
+        }));
     }
 }
 
-// Run reset immediately when script loads
-resetToLogin();
+function loadSession() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        try {
+            const data = JSON.parse(saved);
+            currentUserId = data.userId;
+            currentJWT = data.jwt;
+
+            // Show dashboard with restored state
+            loginCard.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+            jwtDisplay.classList.remove('hidden');
+
+            currentUser.textContent = `${userNames[currentUserId]} (ID ${currentUserId})`;
+            currentJWTEl.textContent = currentJWT;
+
+            // Set payload to current user by default
+            if (payloadTextarea) {
+                payloadTextarea.value = JSON.stringify({ id: currentUserId }, null, 2);
+            }
+
+            return true; // session restored
+        } catch (e) {
+            console.error('Invalid saved session', e);
+        }
+    }
+    return false;
+}
+
+// Try to restore session on page load
+const sessionRestored = loadSession();
+
+// If no session was restored → reset to login defaults
+if (!sessionRestored) {
+    if (payloadTextarea) {
+        payloadTextarea.value = JSON.stringify({ id: 1 }, null, 2);
+    }
+    if (responseBox) {
+        responseBox.textContent = '';
+    }
+}
 
 // ────────────────────────────────────────────────
 // Generate fake JWT
@@ -97,10 +130,7 @@ function simulateApi(method, endpoint, payload, jwt) {
     }
 
     // VULNERABILITY: No ownership check here.
-    // Any logged-in user can access/update any other user's data by changing id.
-    // TO FIX (server-side): 
-    // const decoded = jwt.verify(jwt, secret);
-    // if (decoded.sub !== id) return { error: 'Forbidden: Not owner' };
+    // TO FIX (server-side): if (decoded.sub !== id) return forbidden
 
     if (endpoint === '/api/profile/{id}') {
         if (method === 'GET') {
@@ -137,6 +167,9 @@ loginBtn.addEventListener('click', () => {
 
     payloadTextarea.value = JSON.stringify({ id: currentUserId }, null, 2);
     responseBox.textContent = '';
+
+    // Save to localStorage so it survives refresh
+    saveSession();
 });
 
 getProfileBtn.addEventListener('click', () => {
@@ -176,13 +209,16 @@ putProfileBtn.addEventListener('click', () => {
 });
 
 logoutBtn.addEventListener('click', () => {
-    resetToLogin();  // Reuse the same reset function
+    currentJWT = null;
+    currentUserId = null;
+    localStorage.removeItem(STORAGE_KEY);  // Clear saved session
+
+    dashboard.classList.add('hidden');
+    loginCard.classList.remove('hidden');
+    jwtDisplay.classList.add('hidden');
+    jwtDisplay.textContent = '';
+    responseBox.textContent = '';
 });
 
-// Initial setup (in case DOM is ready but we want safe fallback)
-if (payloadTextarea) {
-    payloadTextarea.value = JSON.stringify({ id: 1 }, null, 2);
-}
-
-// Note: To exploit BOLA → edit the "id" value in the textarea (via browser or DevTools)
-// and click any GET/PUT button. No real auth checks are done.
+// Note: To exploit BOLA, edit the "id" in the textarea and click a button.
+// Session persists across refreshes until you click Logout.

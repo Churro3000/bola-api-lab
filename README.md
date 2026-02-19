@@ -104,6 +104,7 @@ Open `script.js`, find `simulateApi` function. Add this code after the `try { id
 
 
 ###  javascript
+```javascript
 // Fake decode JWT (in real server: use jwt.verify(jwt, secret))
 const jwtParts = jwt.split('.');
 if (jwtParts.length !== 3) {

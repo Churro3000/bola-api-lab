@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOLA API Lab – Broken Object Level Authorization</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>BOLA API Lab</h1>
+      <p>Simulated REST API demonstrating OWASP API #1: Broken Object Level Authorization</p>
+    </header>
+
+    <!-- Login -->
+    <section id="login-section">
+      <h2>Login</h2>
+      <select id="user-select">
+        <option value="1">User Alice (ID 1)</option>
+        <option value="2">User Bob (ID 2)</option>
+        <option value="3">User Charlie (ID 3)</option>
+        <option value="999">Admin (ID 999)</option>
+      </select>
+      <button id="login-btn">Login & Get JWT</button>
+      <p id="login-status"></p>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="hidden">
+      <h2>Dashboard – Logged in as <span id="current-user"></span></h2>
+      <p>Your JWT: <code id="jwt-display"></code></p>
+      <button id="get-profile">Get My Profile (GET /api/profile/me)</button>
+      <button id="get-order">Get My Order (GET /api/orders/me)</button>
+      <button id="update-profile">Update My Profile (PUT /api/profile/me)</button>
+
+      <div id="api-response" class="response-box"></div>
+
+      <h3>Exploit BOLA</h3>
+      <p>Change the ID in the request payload below and click buttons above — you'll see/update other users' data!</p>
+      <textarea id="request-payload" rows="6">{"userId": "1", "name": "Alice Updated", "email": "alice@new.com"}</textarea>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

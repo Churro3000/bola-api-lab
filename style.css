@@ -142,11 +142,16 @@ header p {
 #jwt-display {
   font-family: monospace;
   background: #0d1117;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 10px;
   word-break: break-all;
-  margin: 16px 0;
-  font-size: 0.95rem;
+  margin: 20px 0;
+  font-size: 0.9rem;
+  white-space: pre-wrap;      /* ← Add this line: makes long lines wrap nicely */
+  max-height: 120px;          /* ← Optional: limit height + scroll if too long */
+  overflow-y: auto;
+}
+
 }
 .response-box {
   background: #161b22;

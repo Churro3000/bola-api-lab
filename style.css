@@ -5,8 +5,8 @@
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #0d1117;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #0d1117 0%, #0a0e14 100%);
   color: #e6edf3;
   min-height: 100vh;
   display: flex;
@@ -76,7 +76,6 @@ button:hover {
 
 #logout-btn {
   background: #3b82f6;
-  margin-top: 32px;
 }
 
 #logout-btn:hover {
@@ -100,7 +99,7 @@ button:hover {
 }
 
 .response-box {
-  background: #0d1117;
+  background: #161b22;
   padding: 24px;
   border-radius: 12px;
   margin: 32px 0;
@@ -121,6 +120,7 @@ textarea {
   font-family: monospace;
   font-size: 1rem;
   resize: vertical;
+  margin-top: 16px;
 }
 
 .hidden {

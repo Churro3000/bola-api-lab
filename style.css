@@ -1,186 +1,140 @@
+/* style.css – Professional layout with centered cards, green/blue accents, black/white base */
+
+/* Global resets and body centering */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, #0d1117 0%, #0a0e14 100%);
-  color: #e6edf3;
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0a;
+  color: #e5e7eb;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 40px;
 }
 
-/* Main wrapper – ensures full centering */
-.wrapper {
-  width: 100%;
-  max-width: 520px;
-}
-
-/* Login card – big, centered, professional SaaS-style */
-#login-section {
-  background: #161b22;
-  border: 1px solid #30363d;
+/* Card style – professional, centered box for login/dashboard */
+.card {
+  background: #1a1a1a;
   border-radius: 16px;
-  padding: 60px 40px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  padding: 48px 40px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  max-width: 520px;
+  width: 100%;
   text-align: center;
-  transition: transform 0.2s ease;
-}
-#login-section:hover {
-  transform: translateY(-4px);
-}
-#login-section h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #58a6ff;
-  margin-bottom: 40px;
-}
-#login-section select {
-  width: 100%;
-  padding: 16px 20px;
-  font-size: 1.15rem;
-  background: #0d1117;
-  color: #e6edf3;
-  border: 1px solid #444c56;
-  border-radius: 10px;
-  margin-bottom: 32px;
-  appearance: none;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-#login-section select:focus {
-  border-color: #58a6ff;
-  outline: none;
-}
-#login-btn {
-  width: 100%;
-  padding: 18px;
-  font-size: 1.3rem;
-  font-weight: 600;
-  background: linear-gradient(90deg, #238636, #2ea043);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.25s;
-  box-shadow: 0 4px 15px rgba(35, 134, 54, 0.3);
-}
-#login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(35, 134, 54, 0.5);
-}
-#login-status {
-  margin-top: 24px;
-  font-size: 1.05rem;
-  color: #8b949e;
+  border: 1px solid #333;
 }
 
-/* Header (dashboard) */
-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-header h1 {
-  font-size: 2.8rem;
-  color: #58a6ff;                     /* ← Changed to blue for "BOLA API Lab" title */
+/* Headings */
+h1 {
+  font-size: 2.6rem;
+  color: #3b82f6; /* blue for main title */
   margin-bottom: 12px;
 }
-header p {
-  font-size: 1.1rem;
-  color: #8b949e;
-  margin-top: 8px;
-  margin-bottom: 10px !important;                /* ← Added 10px margin space BELOW the subtitle text */
+h2 {
+  font-size: 1.8rem;
+  color: #10b981; /* green for subheadings */
+  margin-bottom: 28px;
 }
-
-/* Dashboard – centered after login */
-#dashboard {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-#dashboard header {
-  text-align: center;
-  margin-bottom: 48px;
-}
-#dashboard h1 {
-  font-size: 2.8rem;
-  color: #58a6ff;
-  margin-bottom: 12px;
-}
-#dashboard h2 {
+h3 {
   font-size: 1.4rem;
-  color: #8b949e;
-  margin-bottom: 32px;
+  color: #3b82f6; /* blue for exploit heading */
+  margin: 32px 0 12px;
 }
-#dashboard button {
+
+/* Paragraphs */
+p {
+  font-size: 1.1rem;
+  color: #9ca3af;
+  margin-bottom: 24px;
+}
+
+/* Select dropdown */
+select {
   width: 100%;
-  max-width: 420px;
-  margin: 16px auto;
-  display: block;
+  padding: 14px 16px;
+  font-size: 1.1rem;
+  background: #0d1117;
+  color: #e5e7eb;
+  border: 1px solid #444;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+/* Buttons – green base, hover effect */
+button {
+  width: 100%;
   padding: 16px;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  background: #238636;
+  background: #10b981; /* green */
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
+  margin-bottom: 16px;
 }
-#dashboard button:hover {
-  background: #2ea043;
+button:hover {
+  background: #059669; /* darker green */
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-/* JWT display & response */
-#jwt-display {
-  font-family: monospace;
+/* Logout button – blue variant */
+#logout-btn {
+  background: #3b82f6; /* blue */
+}
+#logout-btn:hover {
+  background: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* JWT display code block */
+code {
+  display: block;
   background: #0d1117;
-  padding: 16px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 6px;
   word-break: break-all;
-  margin: 20px 0;
   font-size: 0.9rem;
-  white-space: pre-wrap;      /* ← Add this line: makes long lines wrap nicely */
-  max-height: 120px;          /* ← Optional: limit height + scroll if too long */
-  overflow-y: auto;
+  margin: 16px 0;
 }
 
-}
+/* Response box – polished output area */
 .response-box {
   background: #161b22;
-  padding: 28px;
+  padding: 24px;
   border-radius: 12px;
-  margin: 32px 0;
   border: 1px solid #30363d;
+  margin: 24px 0;
+  font-family: monospace;
   white-space: pre-wrap;
-  font-family: 'Courier New', monospace;
-  font-size: 0.98rem;
-  color: #e6edf3;
+  color: #e5e7eb;
+  font-size: 0.95rem;
 }
 
-/* Hidden class */
-.hidden {
-  display: none !important;
-}
-
-/* Request payload textarea */
-#request-payload {
+/* Textarea for payload – code-like input */
+textarea {
   width: 100%;
-  min-height: 160px;
+  min-height: 120px;
   background: #0d1117;
-  color: #e6edf3;
-  border: 1px solid #444c56;
+  color: #e5e7eb;
+  border: 1px solid #444;
+  border-radius: 8px;
   padding: 16px;
-  border-radius: 10px;
-  font-family: 'Courier New', monospace;
+  font-family: monospace;
   font-size: 1rem;
-  margin: 24px auto;
   resize: vertical;
+  margin-top: 16px;
+}
+
+/* Hidden class for toggling */
+.hidden {
+  display: none;
 }

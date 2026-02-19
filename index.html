@@ -1,48 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BOLA API Lab – Broken Object Level Authorization</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOLA API Lab</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Login Card -->
-  <div id="login-card" class="card">
-    <h1>BOLA API Lab</h1>
-    <p class="subtitle">Simulated REST API – OWASP API Top 10 #1: Broken Object Level Authorization</p>
-    <h2>Login</h2>
-    <select id="user-select">
-      <option value="1">User Alice (ID 1)</option>
-      <option value="2">User Bob (ID 2)</option>
-      <option value="3">User Charlie (ID 3)</option>
-      <option value="999">Admin (ID 999)</option>
-    </select>
-    <button id="login-btn">Login & Get JWT</button>
-    <p id="login-status"></p>
-  </div>
-
-  <!-- Dashboard Card – hidden until login -->
-  <div id="dashboard-card" class="card hidden">
-    <div class="dash-header">
-      <h2>Dashboard – Logged in as <span id="current-user"></span></h2>
-      <button id="logout-btn">Logout</button>
+    <div class="container">
+        <div id="login-card" class="card">
+            <h1>BOLA API Lab</h1>
+            <p>Demonstrating Broken Object Level Authorization (OWASP API Top 10 #1)</p>
+            <label for="user-select">Select User:</label>
+            <select id="user-select">
+                <option value="1">Alice (ID 1)</option>
+                <option value="2">Bob (ID 2)</option>
+                <option value="3">Charlie (ID 3)</option>
+                <option value="999">Admin (ID 999)</option>
+            </select>
+            <button id="login-btn">Login & Get JWT</button>
+            <div id="jwt-display" class="hidden"></div>
+        </div>
+        <div id="dashboard" class="card hidden">
+            <h2>Dashboard</h2>
+            <p>Current User: <span id="current-user"></span></p>
+            <p>JWT: <span id="current-jwt"></span></p>
+            <textarea id="payload" rows="5">{"id":1}</textarea>
+            <div class="buttons">
+                <button id="get-profile-btn">GET /api/profile/{id}</button>
+                <button id="get-orders-btn">GET /api/orders/{id}</button>
+                <button id="put-profile-btn">PUT /api/profile/{id}</button>
+            </div>
+            <div id="response-box"></div>
+            <button id="logout-btn">Logout</button>
+        </div>
     </div>
-    <p class="jwt-info">Your JWT: <code id="jwt-display"></code></p>
-
-    <div class="actions">
-      <button id="get-profile">Get My Profile</button>
-      <button id="get-order">Get My Order</button>
-      <button id="update-profile">Update My Profile</button>
-    </div>
-
-    <div id="api-response" class="response-box"></div>
-
-    <h3>Exploit BOLA</h3>
-    <p>Edit the "id" below (e.g. change to 2 or 999) → click a button → see/update other users' data!</p>
-    <textarea id="request-payload" rows="5">{"id": "1", "name": "Alice Updated", "email": "alice@new.com"}</textarea>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -124,6 +124,8 @@ if (decodedPayload.sub !== id) {
 
 
 
+
+```
 ### Testing the Fix: What Happens After Applying the Ownership Check
 
 After adding the ownership check in `simulateApi()` (decoding the JWT and comparing `sub` to the requested `id`), the BOLA vulnerability is closed in this simulation.

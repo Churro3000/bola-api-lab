@@ -22,12 +22,12 @@ body {
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
-    overflow: hidden;               /* Prevents child elements from escaping */
-    word-break: break-word;         /* Extra safety for very long content */
+    overflow: hidden;
+    word-break: break-word;
 }
 
 h1, h2 {
-    color: #4caf50; /* Green accent */
+    color: #4caf50;
 }
 
 label {
@@ -43,7 +43,7 @@ select, button, textarea {
     border: none;
     border-radius: 4px;
     font-size: 16px;
-    box-sizing: border-box;         /* Makes sure padding doesn't increase size */
+    box-sizing: border-box;
 }
 
 select {
@@ -52,7 +52,7 @@ select {
 }
 
 button {
-    background-color: #2196f3; /* Blue accent */
+    background-color: #2196f3;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -67,40 +67,45 @@ textarea {
     color: #e0e0e0;
     resize: vertical;
     font-family: monospace;
+    font-size: 0.94em;
     white-space: pre-wrap;
-    overflow-wrap: break-word;
-    word-break: break-all;          /* Breaks very long lines (important for JSON) */
+    overflow-wrap: anywhere;     /* more aggressive than break-word */
+    word-break: break-all;
+    hyphens: auto;
 }
 
 #jwt-display,
 #current-jwt {
     word-break: break-all;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
     white-space: normal;
     max-width: 100%;
     font-family: monospace;
-    font-size: 0.92em;
-    color: #81c784;                 /* Light green – nice for tokens */
+    font-size: 0.88em;           /* smaller → less chance to overflow */
+    color: #81c784;
     margin: 8px 0;
-    padding: 8px;
+    padding: 8px 10px;
     background-color: #252525;
     border-radius: 4px;
+    line-height: 1.35;
+    hyphens: auto;
 }
 
 #response-box {
     background-color: #2c2c2c;
-    padding: 16px;
+    padding: 14px;
     border-radius: 4px;
     margin-bottom: 16px;
     white-space: pre-wrap;
-    word-break: break-all;          /* Critical for long base64 / JSON */
-    overflow-wrap: break-word;
-    overflow-x: auto;               /* Horizontal scroll if still too wide */
-    max-height: 420px;              /* Prevents it from growing forever */
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    overflow-x: auto;
+    max-height: 400px;
     overflow-y: auto;
     font-family: monospace;
-    font-size: 0.94em;
+    font-size: 0.92em;
     line-height: 1.4;
+    hyphens: auto;
 }
 
 .hidden {
@@ -121,6 +126,6 @@ textarea {
     }
     .buttons button {
         width: auto;
-        flex: 1 1 200px;            /* Buttons grow nicely on wider screens */
+        flex: 1 1 200px;
     }
 }

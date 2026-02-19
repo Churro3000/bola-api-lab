@@ -1,4 +1,4 @@
-// Fake users data – never do in real apps
+// Fake users – never do this in real apps
 const users = {
   "1": { name: "Alice", email: "alice@example.com", role: "user", order: "Order #1001: Shipped" },
   "2": { name: "Bob", email: "bob@example.com", role: "user", order: "Order #1002: Pending" },
@@ -17,7 +17,7 @@ function createJWT(userId) {
   return `${header}.${payload}.${signature}`;
 }
 
-// Parse JWT – client-side for demo
+// Parse JWT
 function parseJWT(token) {
   try {
     const [, payload] = token.split(".");
@@ -27,54 +27,76 @@ function parseJWT(token) {
   }
 }
 
-// Login button handler
+// Login
 document.getElementById("login-btn").addEventListener("click", () => {
   const userId = document.getElementById("user-select").value;
   const token = createJWT(userId);
   localStorage.setItem("jwt", token);
-  document.getElementById("login-section").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  document.getElementById("current-user").textContent = users[userId]?.name || "Unknown";
-  document.getElementById("jwt-display").textContent = token;
-  document.getElementById("login-status").textContent = "Logged in successfully!";
+  localStorage.setItem("userId", userId); // for easy tampering demo
+  showDashboard(userId, token);
 });
 
-// Logout button handler
+// Show dashboard
+function showDashboard(userId, token) {
+  document.getElementById("login-card").classList.add("hidden");
+  document.getElementById("dashboard-card").classList.remove("hidden");
+  document.getElementById("current-user").textContent = users[userId]?.name || "Unknown";
+  document.getElementById("jwt-display").textContent = token;
+}
+
+// Logout
 document.getElementById("logout-btn").addEventListener("click", () => {
   localStorage.removeItem("jwt");
-  document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("login-section").classList.remove("hidden");
+  localStorage.removeItem("userId");
+  document.getElementById("dashboard-card").classList.add("hidden");
+  document.getElementById("login-card").classList.remove("hidden");
   document.getElementById("api-response").textContent = "";
 });
 
-// Simulated API call – vulnerable to BOLA (no ownership check)
-async function callApi(endpoint, method = "GET", body = null) {
+// Simulated API call – vulnerable to BOLA
+function callApi(endpoint, method = "GET", body = null) {
   const token = localStorage.getItem("jwt");
-  if (!token) return "Error: Not logged in";
+  if (!token) {
+    document.getElementById("api-response").textContent = "Error: Not logged in";
+    return;
+  }
 
-  const id = body ? body.id : endpoint.split("/").pop(); // Get ID from body or URL
+  const id = body?.id || endpoint.split("/").pop();
   const user = users[id] || { error: "Resource not found" };
 
-  // VULN: No check if current user owns the ID – BOLA here
-  const result = method === "PUT" ? { message: "Updated", newData: body } : user;
+  // VULNERABLE: No ownership check – anyone can access/update any ID
+  let result;
+  if (method === "PUT") {
+    result = { message: "Updated", updatedData: body };
+  } else {
+    result = user;
+  }
 
   document.getElementById("api-response").textContent = JSON.stringify(result, null, 2);
 }
 
-// Get Profile button
+// Button handlers
 document.getElementById("get-profile").addEventListener("click", () => {
   const body = JSON.parse(document.getElementById("request-payload").value || "{}");
   callApi(`/api/profile/${body.id || "me"}`);
 });
 
-// Get Order button
 document.getElementById("get-order").addEventListener("click", () => {
   const body = JSON.parse(document.getElementById("request-payload").value || "{}");
   callApi(`/api/orders/${body.id || "me"}`);
 });
 
-// Update Profile button
 document.getElementById("update-profile").addEventListener("click", () => {
   const body = JSON.parse(document.getElementById("request-payload").value || "{}");
   callApi(`/api/profile/${body.id || "me"}`, "PUT", body);
 });
+
+// Auto-load if already logged in
+if (localStorage.getItem("jwt")) {
+  const token = localStorage.getItem("jwt");
+  const parsed = parseJWT(token);
+  const userId = parsed?.sub || localStorage.getItem("userId");
+  if (userId && users[userId]) {
+    showDashboard(userId, token);
+  }
+}

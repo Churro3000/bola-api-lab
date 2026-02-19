@@ -1,4 +1,3 @@
-<!-- index.html – Main page structure with professional centered login and dashboard -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,10 +7,10 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Login section – centered card -->
-  <section id="login-section" class="card">
+  <!-- Login Card -->
+  <div id="login-card" class="card">
     <h1>BOLA API Lab</h1>
-    <p>Simulated REST API demonstrating OWASP API #1: Broken Object Level Authorization</p>
+    <p class="subtitle">Simulated REST API – OWASP API Top 10 #1: Broken Object Level Authorization</p>
     <h2>Login</h2>
     <select id="user-select">
       <option value="1">User Alice (ID 1)</option>
@@ -21,23 +20,28 @@
     </select>
     <button id="login-btn">Login & Get JWT</button>
     <p id="login-status"></p>
-  </section>
+  </div>
 
-  <!-- Dashboard section – hidden until login, with logout -->
-  <section id="dashboard" class="card hidden">
-    <h2>Dashboard – Logged in as <span id="current-user"></span></h2>
-    <p>Your JWT: <code id="jwt-display"></code></p>
-    <button id="get-profile">Get Profile (GET /api/profile/{id})</button>
-    <button id="get-order">Get Order (GET /api/orders/{id})</button>
-    <button id="update-profile">Update Profile (PUT /api/profile/{id})</button>
-    <button id="logout-btn">Logout</button>
+  <!-- Dashboard Card – hidden until login -->
+  <div id="dashboard-card" class="card hidden">
+    <div class="dash-header">
+      <h2>Dashboard – Logged in as <span id="current-user"></span></h2>
+      <button id="logout-btn">Logout</button>
+    </div>
+    <p class="jwt-info">Your JWT: <code id="jwt-display"></code></p>
+
+    <div class="actions">
+      <button id="get-profile">Get My Profile</button>
+      <button id="get-order">Get My Order</button>
+      <button id="update-profile">Update My Profile</button>
+    </div>
 
     <div id="api-response" class="response-box"></div>
 
     <h3>Exploit BOLA</h3>
-    <p>Change the "id" in the payload below (e.g. to 2 or 999) and click a button — you'll access other users' data!</p>
-    <textarea id="request-payload" rows="6">{"id": "1", "name": "Updated Name", "email": "updated@email.com"}</textarea>
-  </section>
+    <p>Edit the "id" below (e.g. change to 2 or 999) → click a button → see/update other users' data!</p>
+    <textarea id="request-payload" rows="5">{"id": "1", "name": "Alice Updated", "email": "alice@new.com"}</textarea>
+  </div>
 
   <script src="script.js"></script>
 </body>

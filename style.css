@@ -31,18 +31,15 @@ body {
   text-align: center;
   transition: transform 0.2s ease;
 }
-
 #login-section:hover {
   transform: translateY(-4px);
 }
-
 #login-section h2 {
   font-size: 2.5rem;
   font-weight: 700;
   color: #58a6ff;
   margin-bottom: 40px;
 }
-
 #login-section select {
   width: 100%;
   padding: 16px 20px;
@@ -56,12 +53,10 @@ body {
   cursor: pointer;
   transition: border-color 0.2s;
 }
-
 #login-section select:focus {
   border-color: #58a6ff;
   outline: none;
 }
-
 #login-btn {
   width: 100%;
   padding: 18px;
@@ -75,16 +70,31 @@ body {
   transition: all 0.25s;
   box-shadow: 0 4px 15px rgba(35, 134, 54, 0.3);
 }
-
 #login-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(35, 134, 54, 0.5);
 }
-
 #login-status {
   margin-top: 24px;
   font-size: 1.05rem;
   color: #8b949e;
+}
+
+/* Header (dashboard) */
+header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+header h1 {
+  font-size: 2.8rem;
+  color: #58a6ff;                     /* ← Changed to blue for "BOLA API Lab" title */
+  margin-bottom: 12px;
+}
+header p {
+  font-size: 1.1rem;
+  color: #8b949e;
+  margin-top: 8px;
+  margin-bottom: 10px;                /* ← Added 10px margin space BELOW the subtitle text */
 }
 
 /* Dashboard – centered after login */
@@ -94,24 +104,20 @@ body {
   margin: 0 auto;
   padding: 40px 20px;
 }
-
 #dashboard header {
   text-align: center;
   margin-bottom: 48px;
 }
-
 #dashboard h1 {
   font-size: 2.8rem;
   color: #58a6ff;
   margin-bottom: 12px;
 }
-
 #dashboard h2 {
   font-size: 1.4rem;
   color: #8b949e;
   margin-bottom: 32px;
 }
-
 #dashboard button {
   width: 100%;
   max-width: 420px;
@@ -127,7 +133,6 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
-
 #dashboard button:hover {
   background: #2ea043;
   transform: translateY(-2px);
@@ -143,7 +148,6 @@ body {
   margin: 16px 0;
   font-size: 0.95rem;
 }
-
 .response-box {
   background: #161b22;
   padding: 28px;

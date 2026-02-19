@@ -94,7 +94,7 @@ header p {
   font-size: 1.1rem;
   color: #8b949e;
   margin-top: 8px;
-  margin-bottom: 10px;                /* ← Added 10px margin space BELOW the subtitle text */
+  margin-bottom: 10px !important;                /* ← Added 10px margin space BELOW the subtitle text */
 }
 
 /* Dashboard – centered after login */
